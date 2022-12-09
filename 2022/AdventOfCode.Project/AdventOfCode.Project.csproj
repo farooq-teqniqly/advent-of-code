@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Types" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj" />
     </ItemGroup>
 

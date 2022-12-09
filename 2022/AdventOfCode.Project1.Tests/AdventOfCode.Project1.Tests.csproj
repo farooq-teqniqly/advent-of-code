@@ -26,7 +26,6 @@
     <ItemGroup>
       <ProjectReference Include="..\AdventOfCode.Project\AdventOfCode.Project.csproj" />
       <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj" />
-      <ProjectReference Include="..\AdventOfCode.Tests.Shared\AdventOfCode.Tests.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

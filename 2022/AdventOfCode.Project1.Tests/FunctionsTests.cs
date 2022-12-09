@@ -1,5 +1,4 @@
 using AdventOfCode.Project;
-using AdventOfCode.Tests.Shared;
 
 namespace AdventOfCode.Project1.Tests;
 
@@ -22,34 +21,21 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     }
 
     [Fact]
-    public void CanCreateGroups()
+    public void CanCreateLineItems()
     {
-        var groups = fixture.Groups.ToArray();
-        
-        groups.Length.Should().Be(3);
-        groups.Select(g => g.Index).ToArray().SequenceEqual(new[] { 1, 2, 3 }).Should().BeTrue();
-        groups.First().Data.Select(d => d).ToArray().SequenceEqual(new[] { 100 }).Should().BeTrue();
-        groups.ElementAt(1).Data.Select(d => d).ToArray().SequenceEqual(new[] { 200, 300, 400 }).Should().BeTrue();
-        groups.Last().Data.Select(d => d).ToArray().SequenceEqual(new[] { 50, 60 }).Should().BeTrue();
-    }
+        var lines = fixture.Lines.ToArray();
+        var lineItems = lines.CreateLineItems().ToArray();
 
-    [Fact]
-    public void CanGetGroupTotals()
-    {
-        var totals = fixture.GroupTotals.ToArray();
+        var index1LineItems = lineItems.Where(li => li.Index == 1).ToArray();
+        index1LineItems.Length.Should().Be(1);
+        index1LineItems.Single().Value.Should().Be(100);
         
-        totals.Length.Should().Be(3);
-        totals.Select(t => t.Index).ToArray().SequenceEqual(new[] { 1, 2, 3 }).Should().BeTrue();
-        totals.First().Total.Should().Be(100);
-        totals.ElementAt(1).Total.Should().Be(900);
-        totals.Last().Total.Should().Be(110);
-    }
-
-    [Fact]
-    public void CanGetGroupWithMaxTotal()
-    {
-        var max = Functions.GetMaxGroup(fixture.GroupTotals);
-        max.Index.Should().Be(2);
-        max.Total.Should().Be(900);
+        var index2LineItems = lineItems.Where(li => li.Index == 2).ToArray();
+        index2LineItems.Length.Should().Be(3);
+        index2LineItems.Select(li => li.Value).ToArray().SequenceEqual(new[] { 200, 300, 400 }).Should().BeTrue();
+        
+        var index3LineItems = lineItems.Where(li => li.Index == 3).ToArray();
+        index3LineItems.Length.Should().Be(2);
+        index3LineItems.Select(li => li.Value).ToArray().SequenceEqual(new[] { 50, 60 }).Should().BeTrue();
     }
 }
