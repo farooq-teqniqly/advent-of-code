@@ -1,6 +1,6 @@
-﻿using AdventOfCode.Project1.Types;
+﻿using AdventOfCode.Shared.Types;
 
-namespace AdventOfCode.Project1;
+namespace AdventOfCode.Project;
 
 public static class Functions
 {
@@ -47,5 +47,15 @@ public static class Functions
     public static GroupTotal GetMaxGroup(IEnumerable<GroupTotal> groupTotals)
     {
         return groupTotals.Max() ?? throw new InvalidOperationException();
+    }
+
+    public static IEnumerable<GroupTotal> SortDescending(this IEnumerable<GroupTotal> groupTotals)
+    {
+        return groupTotals.OrderByDescending(t => t.Total);
+    }
+
+    public static IEnumerable<GroupTotal> Top(this IEnumerable<GroupTotal> groupTotals, int topN)
+    {
+        return groupTotals.Take(topN);
     }
 }

@@ -1,6 +1,7 @@
-﻿using AdventOfCode.Project1.Types;
+﻿using AdventOfCode.Project;
+using AdventOfCode.Shared.Types;
 
-namespace AdventOfCode.Project1.Tests;
+namespace AdventOfCode.Tests.Shared;
 
 public class ProgramTestsFixture
 {
@@ -10,7 +11,7 @@ public class ProgramTestsFixture
     
     public ProgramTestsFixture()
     {
-        const string input = "100\n\n200\n300\n400\n";
+        const string input = "100\n\n200\n300\n400\n\n50\n60";
         TextReader reader = new StringReader(input);
         Lines = Functions.ReadLines(reader).ToArrayAsync().Result;
         Groups = Functions.CreateGroups(Lines).ToArray();

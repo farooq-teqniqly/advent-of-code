@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Project1.Types;
+﻿namespace AdventOfCode.Shared.Types;
 
 public record GroupTotal(int Index, int Total) : IComparable<GroupTotal>
 {
