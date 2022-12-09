@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode.Project", "AdventOfCode.Project\AdventOfCode.Project.csproj", "{0D2AC747-5396-4E84-A459-85723C8168B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode.Project1.Tests", "AdventOfCode.Project1.Tests\AdventOfCode.Project1.Tests.csproj", "{F3B8E836-1B3A-4FF3-8459-550FAA12B069}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode.Project1.Tests", "AdventOfCode.Project.Tests\AdventOfCode.Project.Tests.csproj", "{F3B8E836-1B3A-4FF3-8459-550FAA12B069}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode.Shared", "AdventOfCode.Shared\AdventOfCode.Shared.csproj", "{78BB23D7-8AEE-486F-8B5A-0BB0B174C490}"
 EndProject
