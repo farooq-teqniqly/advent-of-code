@@ -1,6 +1,4 @@
-﻿using AdventOfCode.Project;
-
-namespace AdventOfCode.Project1.Tests;
+﻿namespace AdventOfCode.Project.Tests;
 
 public class AdventOfCodeTests
 {
