@@ -62,4 +62,18 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
         thirdRucksack.Compartments[1].Should().Be("vPwwTWBwg");
         thirdRucksack.Priority.Should().Be(42);
     }
+
+    [Fact]
+    public void CreateRucksackThrowsOnInvalidCharacter()
+    {
+        var lines = new [] {"1ab1"};
+
+        Func<IEnumerable<Rucksack>> func = () => lines.CreateRucksacks();
+
+        func.Enumerating()
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("'1' is not a valid character.");
+
+    }
 }

@@ -40,8 +40,8 @@ public static class Functions
             }
             
             var midpoint = line.Length / 2;
-            var compartment1 = line[..(midpoint)];
-            var compartment2 = line[(midpoint)..];
+            var compartment1 = line[..midpoint];
+            var compartment2 = line[midpoint..];
             var common = compartment1.Intersect(compartment2).Single();
             
             yield return new Rucksack(new[] { compartment1, compartment2 }, common.ToPriority());
@@ -56,7 +56,8 @@ public static class Functions
         {
             return intValueOfChar - 96;
         }
-        else if (c >= 65 && c <= 90)
+        
+        if (c >= 65 && c <= 90)
         {
             return  intValueOfChar - 38;
         }

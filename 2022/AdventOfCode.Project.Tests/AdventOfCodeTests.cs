@@ -5,7 +5,7 @@ public class AdventOfCodeTests
     [Fact]
     public async Task Day1()
     {
-        var reader = new StreamReader("puzzle.txt");
+        var reader = new StreamReader("day1-2.txt");
         string[] lines;
         
         using (reader)
@@ -26,7 +26,7 @@ public class AdventOfCodeTests
     [Fact]
     public async Task Day2()
     {
-        var reader = new StreamReader("puzzle.txt");
+        var reader = new StreamReader("day1-2.txt");
         string[] lines;
         
         using (reader)
@@ -43,5 +43,21 @@ public class AdventOfCodeTests
         var totalCalories = top3Groups.Sum(grp => grp.Total);
 
         totalCalories.Should().Be(200116);
+    }
+
+    [Fact]
+    public async Task Day3()
+    {
+        var reader = new StreamReader("day3-4.txt");
+        string[] lines;
+        
+        using (reader)
+        {
+            lines = await Functions.ReadLines(reader).ToArrayAsync();
+        }
+
+        var sumOfPriorities = lines.CreateRucksacks().Sum(r => r.Priority);
+
+        sumOfPriorities.Should().Be(8053);
     }
 }
