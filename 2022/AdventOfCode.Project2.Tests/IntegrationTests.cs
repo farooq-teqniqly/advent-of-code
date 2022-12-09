@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Project;
+using FluentAssertions;
 
-namespace AdventOfCode.Project1.Tests;
+namespace AdventOfCode.Project2.Tests;
 
 public class IntegrationTests
 {
@@ -17,9 +18,10 @@ public class IntegrationTests
 
         var groups = Functions.CreateGroups(lines);
         var totals = Functions.GetGroupTotals(groups);
-        var maxGroup = Functions.GetMaxGroup(totals);
 
-        maxGroup.Index.Should().Be(189);
-        maxGroup.Total.Should().Be(67016);
+        var top3Groups = totals.SortDescending().Top(3);
+        var totalCalories = top3Groups.Select(g => g.Total).Sum();
+
+        totalCalories.Should().Be(200116);
     }
 }
