@@ -1,15 +1,20 @@
-﻿using AdventOfCode.Project;
-
-namespace AdventOfCode.Project1.Tests;
+﻿namespace AdventOfCode.Project.Tests;
 
 public class ProgramTestsFixture
 {
-    public IEnumerable<string> Lines { get; }
+    public IEnumerable<string> CalorieLineItems { get; }
+    public IEnumerable<string> RucksackLineItems { get; }
+    public IEnumerable<string> RpsLineItems { get; }
     
     public ProgramTestsFixture()
     {
-        const string input = "100\n\n200\n300\n400\n\n50\n60";
-        TextReader reader = new StringReader(input);
-        Lines = Functions.ReadLines(reader).ToArrayAsync().Result;
+        CalorieLineItems = ReadLineItems(TestData.CalorieLineItems);
+        RucksackLineItems = ReadLineItems(TestData.RucksackLineItems);
+        RpsLineItems = ReadLineItems(TestData.RpsLineItems);
+    }
+
+    private static IEnumerable<string> ReadLineItems(string items)
+    {
+        return Functions.ReadLines(new StringReader(items)).ToArrayAsync().Result;
     }
 }
