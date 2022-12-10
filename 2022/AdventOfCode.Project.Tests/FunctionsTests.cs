@@ -69,39 +69,9 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     public void CanPlayRockPaperScissors()
     {
         var lines = fixture.RPSLineItems;
-        var games = new List<RpsGame>();
-        
-        foreach (var line in lines)
-        {
-            if (string.IsNullOrEmpty(line))
-            {
-                continue;
-            }
-            
-            games.Add(new RpsGame(line));
-        }
-        
-        // Opponent Moves:
-        //  A = Rock
-        //  B = Paper
-        //  C = Scissors
-        
-        // My Moves:
-        //  X = Rock
-        //  Y = Paper
-        //  Z = Scissors
-        
-        // Points:
-        //  1 = Rock
-        //  2 = Paper
-        //  3 = Scissors
-        
-        // Points:
-        //  0 = Lose
-        //  3 = Draw
-        //  6 = Win
+        var games = RpsGameFactory.CreateGames(lines).ToArray();
 
-        games.Count.Should().Be(4);
+        games.Length.Should().Be(4);
 
         var firstGame = games.First();
         firstGame.OpponentMove.Should().Be(RpsChoice.Rock);

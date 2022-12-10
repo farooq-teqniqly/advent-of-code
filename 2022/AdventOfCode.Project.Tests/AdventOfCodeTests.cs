@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Project.Tests;
+﻿using AdventOfCode.Shared.Types.RPS;
+
+namespace AdventOfCode.Project.Tests;
 
 public class AdventOfCodeTests
 {
@@ -45,11 +47,23 @@ public class AdventOfCodeTests
         totalCalories.Should().Be(200116);
     }
 
-    // [Fact]
-    // public async Task Day2()
-    // {
-    //     
-    // }
+    [Fact]
+    public async Task Day2()
+    {
+        var reader = new StreamReader("day2.txt");
+        string[] lines;
+        
+        using (reader)
+        {
+            lines = await Functions.ReadLines(reader).ToArrayAsync();
+        }
+
+        var totalScore = RpsGameFactory
+            .CreateGames(lines)
+            .Sum(g => g.Score);
+
+        totalScore.Should().Be(15337);
+    }
 
     [Fact]
     public async Task Day3()
