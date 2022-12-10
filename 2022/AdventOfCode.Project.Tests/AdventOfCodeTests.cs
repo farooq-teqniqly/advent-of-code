@@ -62,7 +62,7 @@ public class AdventOfCodeTests
             .CreateGames(lines)
             .Sum(g => g.Score);
 
-        totalScore.Should().Be(15337);
+        totalScore.Should().Be(11696);
     }
 
     [Fact]
