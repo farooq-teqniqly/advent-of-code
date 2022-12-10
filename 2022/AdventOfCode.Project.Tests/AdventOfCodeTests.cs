@@ -3,9 +3,9 @@
 public class AdventOfCodeTests
 {
     [Fact]
-    public async Task Day1()
+    public async Task Day1Part1()
     {
-        var reader = new StreamReader("day1-2.txt");
+        var reader = new StreamReader("day1.txt");
         string[] lines;
         
         using (reader)
@@ -24,9 +24,9 @@ public class AdventOfCodeTests
     }
     
     [Fact]
-    public async Task Day2()
+    public async Task Day1Part2()
     {
-        var reader = new StreamReader("day1-2.txt");
+        var reader = new StreamReader("day1.txt");
         string[] lines;
         
         using (reader)
@@ -44,6 +44,12 @@ public class AdventOfCodeTests
 
         totalCalories.Should().Be(200116);
     }
+
+    // [Fact]
+    // public async Task Day2()
+    // {
+    //     
+    // }
 
     [Fact]
     public async Task Day3()

@@ -1,4 +1,6 @@
+using AdventOfCode.Shared;
 using AdventOfCode.Shared.Types;
+using AdventOfCode.Shared.Types.RPS;
 
 namespace AdventOfCode.Project.Tests;
 
@@ -61,6 +63,69 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
         thirdRucksack.Compartments[0].Should().Be("PmmdzqPrV");
         thirdRucksack.Compartments[1].Should().Be("vPwwTWBwg");
         thirdRucksack.Priority.Should().Be(42);
+    }
+
+    [Fact]
+    public void CanPlayRockPaperScissors()
+    {
+        var lines = fixture.RPSLineItems;
+        var games = new List<RpsGame>();
+        
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+            
+            games.Add(new RpsGame(line));
+        }
+        
+        // Opponent Moves:
+        //  A = Rock
+        //  B = Paper
+        //  C = Scissors
+        
+        // My Moves:
+        //  X = Rock
+        //  Y = Paper
+        //  Z = Scissors
+        
+        // Points:
+        //  1 = Rock
+        //  2 = Paper
+        //  3 = Scissors
+        
+        // Points:
+        //  0 = Lose
+        //  3 = Draw
+        //  6 = Win
+
+        var firstGame = games.First();
+        firstGame.OpponentMove.Should().Be(RpsChoice.Rock);
+        firstGame.MyMove.Should().Be(RpsChoice.Paper);
+        firstGame.Result.Should().Be(RpsResult.Win);
+        firstGame.Score.Should().Be(8);
+        
+        var secondGame = games.ElementAt(1);
+        secondGame.OpponentMove.Should().Be(RpsChoice.Paper);
+        secondGame.MyMove.Should().Be(RpsChoice.Rock);
+        secondGame.Result.Should().Be(RpsResult.Lose);
+        secondGame.Score.Should().Be(1);
+        
+        var thirdGame = games.Last();
+        thirdGame.OpponentMove.Should().Be(RpsChoice.Scissors);
+        thirdGame.MyMove.Should().Be(RpsChoice.Scissors);
+        thirdGame.Result.Should().Be(RpsResult.Draw);
+        thirdGame.Score.Should().Be(6);
+    }
+
+    [Fact]
+    public void ToRpsChoiceThrowsOnInvalidString()
+    {
+        Action a = () => "foo".ToRpsChoice();
+
+        a.Should().Throw<InvalidOperationException>().WithMessage("'foo' is an invalid value.");
     }
 
     [Fact]

@@ -4,11 +4,13 @@ public class ProgramTestsFixture
 {
     public IEnumerable<string> CalorieLineItems { get; }
     public IEnumerable<string> RucksackLineItems { get; }
+    public IEnumerable<string> RPSLineItems { get; }
     
     public ProgramTestsFixture()
     {
         CalorieLineItems = ReadLineItems(TestData.CalorieLineItems);
         RucksackLineItems = ReadLineItems(TestData.RucksackLineItems);
+        RPSLineItems = ReadLineItems(TestData.RPSLineItems);
     }
 
     private static IEnumerable<string> ReadLineItems(string items)
