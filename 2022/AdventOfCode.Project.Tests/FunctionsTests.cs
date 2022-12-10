@@ -101,6 +101,8 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
         //  3 = Draw
         //  6 = Win
 
+        games.Count.Should().Be(4);
+
         var firstGame = games.First();
         firstGame.OpponentMove.Should().Be(RpsChoice.Rock);
         firstGame.MyMove.Should().Be(RpsChoice.Paper);
@@ -113,11 +115,17 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
         secondGame.Result.Should().Be(RpsResult.Lose);
         secondGame.Score.Should().Be(1);
         
-        var thirdGame = games.Last();
+        var thirdGame = games.ElementAt(2);
         thirdGame.OpponentMove.Should().Be(RpsChoice.Scissors);
         thirdGame.MyMove.Should().Be(RpsChoice.Scissors);
         thirdGame.Result.Should().Be(RpsResult.Draw);
         thirdGame.Score.Should().Be(6);
+        
+        var lastGame = games.Last();
+        lastGame.OpponentMove.Should().Be(RpsChoice.Scissors);
+        lastGame.MyMove.Should().Be(RpsChoice.Rock);
+        lastGame.Result.Should().Be(RpsResult.Win);
+        lastGame.Score.Should().Be(7);
     }
 
     [Fact]
