@@ -48,7 +48,28 @@ public static class Functions
         }
     }
 
-    private static int ToPriority(this char c)
+    public static IEnumerable<IEnumerable<Rucksack>> DivideIntoGroupsOf(this IEnumerable<Rucksack> rucksacks, int groupSize)
+    {
+        return rucksacks
+            .Select((rucksack, index) => new { rucksack, index })
+            .GroupBy(g => g.index / groupSize)
+            .Select(g => g.Select(r => r.rucksack));
+    }
+
+    public static IEnumerable<char> IntersectAll(this IEnumerable<string> strings)
+    {
+        var arr = strings.ToArray();
+        var intersect = arr.First().Intersect(arr.ElementAt(1));
+
+        for (var i = 2; i < arr.Length; i++)
+        {
+            intersect = intersect.Intersect(arr.ElementAt(i));
+        }
+
+        return intersect;
+    }
+    
+    public static int ToPriority(this char c)
     {
         var intValueOfChar = (int)c;
         

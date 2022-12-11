@@ -65,6 +65,41 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     }
 
     [Fact]
+    public void CanGroupRucksacks()
+    {
+        var lines = _fixture.RucksackLineItems.ToArray();
+        var rucksacks = lines.CreateRucksacks().ToArray();
+        const int groupSize = 3;
+
+        var groups = rucksacks.DivideIntoGroupsOf(groupSize).Single().ToArray();
+        
+        groups.Length.Should().Be(groupSize);
+        
+        groups.Select(r => r.Id)
+            .SequenceEqual(new[]
+                { "vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg" })
+            .Should().Be(true);
+    }
+
+    [Fact]
+    public void CanGetCommonCharactersInGroup()
+    {
+        var lines = _fixture.RucksackLineItems.ToArray();
+        var rucksacks = lines.CreateRucksacks().ToArray();
+        const int groupSize = 3;
+
+        var group = rucksacks.DivideIntoGroupsOf(groupSize).Single().ToArray();
+
+        var ids = group.Select(r => r.Id).ToArray();
+
+        ids.Length.Should().Be(groupSize);
+
+        var intersect = ids.IntersectAll();
+
+        intersect.Single().Should().Be('r');
+    }
+    
+    [Fact]
     public void CanPlayRockPaperScissors()
     {
         var lines = _fixture.RpsLineItems;
@@ -95,6 +130,14 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     public void ToRpsChoiceThrowsOnInvalidString()
     {
         Action a = () => RpsChoiceExtensions.ToRpsChoice("foo");
+
+        a.Should().Throw<InvalidOperationException>().WithMessage("'foo' is an invalid value.");
+    }
+    
+    [Fact]
+    public void ToRpsChoiceFromRpsResultThrowsOnInvalidString()
+    {
+        Action a = () => RpsResultExtensions.ToRpsChoice("foo");
 
         a.Should().Throw<InvalidOperationException>().WithMessage("'foo' is an invalid value.");
     }

@@ -68,7 +68,7 @@ public class AdventOfCodeTests
     [Fact]
     public async Task Day3()
     {
-        var reader = new StreamReader("day3-4.txt");
+        var reader = new StreamReader("day3.txt");
         string[] lines;
         
         using (reader)
@@ -79,5 +79,33 @@ public class AdventOfCodeTests
         var sumOfPriorities = lines.CreateRucksacks().Sum(r => r.Priority);
 
         sumOfPriorities.Should().Be(8053);
+    }
+    
+    [Fact]
+    public async Task Day3Part2()
+    {
+        var reader = new StreamReader("day3.txt");
+        string[] lines;
+        
+        using (reader)
+        {
+            lines = await Functions.ReadLines(reader).ToArrayAsync();
+        }
+
+        var rucksacks = lines.CreateRucksacks().ToArray();
+
+        rucksacks.Length.Should().Be(300);
+
+        const int groupSize = 3;
+        var groups = rucksacks.DivideIntoGroupsOf(groupSize).ToArray() ?? throw new ArgumentNullException("rucksacks.DivideIntoGroupsOf(groupSize).ToArray()");
+        
+        var totalPriority = 0;
+        
+        foreach (var group in groups)
+        {
+            totalPriority += group.Select(r => r.Id).IntersectAll().Single().ToPriority();
+        }
+
+        totalPriority.Should().Be(2425);
     }
 }
