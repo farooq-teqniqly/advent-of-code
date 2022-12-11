@@ -99,18 +99,16 @@ public class AdventOfCodeTests
 
         var chunkSize = 3;
         var chunks = rucksacks.Chunk(chunkSize).ToArray();
-
-        var ids = chunks.SelectMany(e => e.Select(r => r.Id)).ToArray();
-
-        chunks.Length.Should().Be(100);
         
-        // var totalPriority = 0;
-        //
-        // foreach (var chunk in chunks)
-        // {
-        //     var ids = chunk.Select(r => r.Id).ToArray();
-        //     var common = ids[0].Intersect(ids[1].Intersect(ids[2])).Single();
-        //     totalPriority += ids[0].Intersect(ids[1].Intersect(ids[2])).Single().ToPriority();
-        // }
+        var totalPriority = 0;
+        
+        foreach (var chunk in chunks)
+        {
+            var ids = chunk.Select(r => r.Id).ToArray();
+            var intersect = ids.IntersectAll().Single();
+            totalPriority += intersect.ToPriority();
+        }
+
+        totalPriority.Should().Be(2425);
     }
 }

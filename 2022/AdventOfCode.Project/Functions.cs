@@ -50,22 +50,10 @@ public static class Functions
 
     public static IEnumerable<IEnumerable<Rucksack>> Chunk(this IEnumerable<Rucksack> rucksacks, int chunkSize)
     {
-        var chunk = new List<Rucksack>();
-        
-        foreach (var rucksack in rucksacks)
-        {
-            if (chunk.Count() == chunkSize)
-            {
-                yield return chunk;
-                chunk = new List<Rucksack>();
-            }
-            else
-            {
-                chunk.Add(rucksack);
-            }
-        }
-
-        yield return chunk;
+        return rucksacks
+            .Select((rucksack, index) => new { rucksack, index })
+            .GroupBy(g => g.index / chunkSize)
+            .Select(g => g.Select(r => r.rucksack));
     }
 
     public static IEnumerable<char> IntersectAll(this IEnumerable<string> strings)
