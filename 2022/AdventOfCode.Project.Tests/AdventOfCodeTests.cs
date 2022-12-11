@@ -1,5 +1,4 @@
-﻿using AdventOfCode.Shared.Types;
-using AdventOfCode.Shared.Types.RPS;
+﻿using AdventOfCode.Shared.Types.RPS;
 
 namespace AdventOfCode.Project.Tests;
 
@@ -97,16 +96,14 @@ public class AdventOfCodeTests
 
         rucksacks.Length.Should().Be(300);
 
-        var chunkSize = 3;
-        var chunks = rucksacks.Chunk(chunkSize).ToArray();
+        const int groupSize = 3;
+        var groups = rucksacks.DivideIntoGroupsOf(groupSize).ToArray() ?? throw new ArgumentNullException("rucksacks.DivideIntoGroupsOf(groupSize).ToArray()");
         
         var totalPriority = 0;
         
-        foreach (var chunk in chunks)
+        foreach (var group in groups)
         {
-            var ids = chunk.Select(r => r.Id).ToArray();
-            var intersect = ids.IntersectAll().Single();
-            totalPriority += intersect.ToPriority();
+            totalPriority += group.Select(r => r.Id).IntersectAll().Single().ToPriority();
         }
 
         totalPriority.Should().Be(2425);

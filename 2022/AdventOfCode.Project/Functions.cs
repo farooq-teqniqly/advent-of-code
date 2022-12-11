@@ -48,21 +48,22 @@ public static class Functions
         }
     }
 
-    public static IEnumerable<IEnumerable<Rucksack>> Chunk(this IEnumerable<Rucksack> rucksacks, int chunkSize)
+    public static IEnumerable<IEnumerable<Rucksack>> DivideIntoGroupsOf(this IEnumerable<Rucksack> rucksacks, int groupSize)
     {
         return rucksacks
             .Select((rucksack, index) => new { rucksack, index })
-            .GroupBy(g => g.index / chunkSize)
+            .GroupBy(g => g.index / groupSize)
             .Select(g => g.Select(r => r.rucksack));
     }
 
     public static IEnumerable<char> IntersectAll(this IEnumerable<string> strings)
     {
-        var intersect = strings.First().Intersect(strings.ElementAt(1));
+        var arr = strings.ToArray();
+        var intersect = arr.First().Intersect(arr.ElementAt(1));
 
-        for (var i = 2; i < strings.Count(); i++)
+        for (var i = 2; i < arr.Length; i++)
         {
-            intersect = intersect.Intersect(strings.ElementAt(i));
+            intersect = intersect.Intersect(arr.ElementAt(i));
         }
 
         return intersect;

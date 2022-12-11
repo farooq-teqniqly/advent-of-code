@@ -65,34 +65,34 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     }
 
     [Fact]
-    public void CanChunkRucksacks()
+    public void CanGroupRucksacks()
     {
         var lines = _fixture.RucksackLineItems.ToArray();
         var rucksacks = lines.CreateRucksacks().ToArray();
-        var chunkSize = 3;
+        const int groupSize = 3;
 
-        var chunk = rucksacks.Chunk(chunkSize).Single().ToArray();
+        var groups = rucksacks.DivideIntoGroupsOf(groupSize).Single().ToArray();
         
-        chunk.Length.Should().Be(chunkSize);
+        groups.Length.Should().Be(groupSize);
         
-        chunk.Select(r => r.Id)
+        groups.Select(r => r.Id)
             .SequenceEqual(new[]
                 { "vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg" })
             .Should().Be(true);
     }
 
     [Fact]
-    public void CanGetCommonCharactersInChunk()
+    public void CanGetCommonCharactersInGroup()
     {
         var lines = _fixture.RucksackLineItems.ToArray();
         var rucksacks = lines.CreateRucksacks().ToArray();
-        var chunkSize = 3;
+        const int groupSize = 3;
 
-        var chunk = rucksacks.Chunk(chunkSize).Single().ToArray();
+        var group = rucksacks.DivideIntoGroupsOf(groupSize).Single().ToArray();
 
-        var ids = chunk.Select(r => r.Id).ToArray();
+        var ids = group.Select(r => r.Id).ToArray();
 
-        ids.Length.Should().Be(chunkSize);
+        ids.Length.Should().Be(groupSize);
 
         var intersect = ids.IntersectAll();
 
@@ -130,6 +130,14 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     public void ToRpsChoiceThrowsOnInvalidString()
     {
         Action a = () => RpsChoiceExtensions.ToRpsChoice("foo");
+
+        a.Should().Throw<InvalidOperationException>().WithMessage("'foo' is an invalid value.");
+    }
+    
+    [Fact]
+    public void ToRpsChoiceFromRpsResultThrowsOnInvalidString()
+    {
+        Action a = () => RpsResultExtensions.ToRpsChoice("foo");
 
         a.Should().Throw<InvalidOperationException>().WithMessage("'foo' is an invalid value.");
     }
