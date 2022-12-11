@@ -65,6 +65,41 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     }
 
     [Fact]
+    public void CanChunkRucksacks()
+    {
+        var lines = _fixture.RucksackLineItems.ToArray();
+        var rucksacks = lines.CreateRucksacks().ToArray();
+        var chunkSize = 3;
+
+        var chunk = rucksacks.Chunk(chunkSize).Single().ToArray();
+        
+        chunk.Length.Should().Be(chunkSize);
+        
+        chunk.Select(r => r.Id)
+            .SequenceEqual(new[]
+                { "vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg" })
+            .Should().Be(true);
+    }
+
+    [Fact]
+    public void CanGetCommonCharactersInChunk()
+    {
+        var lines = _fixture.RucksackLineItems.ToArray();
+        var rucksacks = lines.CreateRucksacks().ToArray();
+        var chunkSize = 3;
+
+        var chunk = rucksacks.Chunk(chunkSize).Single().ToArray();
+
+        var ids = chunk.Select(r => r.Id).ToArray();
+
+        ids.Length.Should().Be(chunkSize);
+
+        var intersect = ids.IntersectAll();
+
+        intersect.Single().Should().Be('r');
+    }
+    
+    [Fact]
     public void CanPlayRockPaperScissors()
     {
         var lines = _fixture.RpsLineItems;

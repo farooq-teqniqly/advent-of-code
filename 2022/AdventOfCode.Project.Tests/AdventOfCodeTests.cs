@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Shared.Types.RPS;
+﻿using AdventOfCode.Shared.Types;
+using AdventOfCode.Shared.Types.RPS;
 
 namespace AdventOfCode.Project.Tests;
 
@@ -68,7 +69,7 @@ public class AdventOfCodeTests
     [Fact]
     public async Task Day3()
     {
-        var reader = new StreamReader("day3-4.txt");
+        var reader = new StreamReader("day3.txt");
         string[] lines;
         
         using (reader)
@@ -79,5 +80,37 @@ public class AdventOfCodeTests
         var sumOfPriorities = lines.CreateRucksacks().Sum(r => r.Priority);
 
         sumOfPriorities.Should().Be(8053);
+    }
+    
+    [Fact]
+    public async Task Day3Part2()
+    {
+        var reader = new StreamReader("day3.txt");
+        string[] lines;
+        
+        using (reader)
+        {
+            lines = await Functions.ReadLines(reader).ToArrayAsync();
+        }
+
+        var rucksacks = lines.CreateRucksacks().ToArray();
+
+        rucksacks.Length.Should().Be(300);
+
+        var chunkSize = 3;
+        var chunks = rucksacks.Chunk(chunkSize).ToArray();
+
+        var ids = chunks.SelectMany(e => e.Select(r => r.Id)).ToArray();
+
+        chunks.Length.Should().Be(100);
+        
+        // var totalPriority = 0;
+        //
+        // foreach (var chunk in chunks)
+        // {
+        //     var ids = chunk.Select(r => r.Id).ToArray();
+        //     var common = ids[0].Intersect(ids[1].Intersect(ids[2])).Single();
+        //     totalPriority += ids[0].Intersect(ids[1].Intersect(ids[2])).Single().ToPriority();
+        // }
     }
 }

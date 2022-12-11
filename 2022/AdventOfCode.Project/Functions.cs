@@ -48,7 +48,39 @@ public static class Functions
         }
     }
 
-    private static int ToPriority(this char c)
+    public static IEnumerable<IEnumerable<Rucksack>> Chunk(this IEnumerable<Rucksack> rucksacks, int chunkSize)
+    {
+        var chunk = new List<Rucksack>();
+        
+        foreach (var rucksack in rucksacks)
+        {
+            if (chunk.Count() == chunkSize)
+            {
+                yield return chunk;
+                chunk = new List<Rucksack>();
+            }
+            else
+            {
+                chunk.Add(rucksack);
+            }
+        }
+
+        yield return chunk;
+    }
+
+    public static IEnumerable<char> IntersectAll(this IEnumerable<string> strings)
+    {
+        var intersect = strings.First().Intersect(strings.ElementAt(1));
+
+        for (var i = 2; i < strings.Count(); i++)
+        {
+            intersect = intersect.Intersect(strings.ElementAt(i));
+        }
+
+        return intersect;
+    }
+    
+    public static int ToPriority(this char c)
     {
         var intValueOfChar = (int)c;
         
