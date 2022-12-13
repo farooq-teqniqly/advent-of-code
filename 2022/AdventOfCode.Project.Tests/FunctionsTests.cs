@@ -194,4 +194,24 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
             .Should()
             .Be(result);
     }
+
+    [Theory]
+    [InlineData(2, 4, 6, 8, false)]
+    [InlineData(2, 3, 4, 5, false)]
+    [InlineData(5, 7, 7, 9, true)]
+    [InlineData(2, 8, 3, 7, true)]
+    [InlineData(6, 6, 4, 6, true)]
+    [InlineData(2, 6, 4, 8, true)]
+    public void CanDetermineIfThereIsAnyOverlap(
+        int range1Lo,
+        int range1Hi,
+        int range2Lo,
+        int range2Hi,
+        bool result)
+    {
+        Enumerable.Range(range1Lo, range1Hi - range1Lo + 1)
+            .Intersect(Enumerable.Range(range2Lo, range2Hi - range2Lo + 1))
+            .Any()
+            .Should().Be(result);
+    }
 }
