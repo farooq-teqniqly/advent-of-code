@@ -155,4 +155,43 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
             .WithMessage("'1' is not a valid character.");
 
     }
+
+    [Fact]
+    public void CanCreateRanges()
+    {
+        var lines = _fixture.RangeLineItems;
+        var rangeList = lines.CreateRanges().ToArray();
+
+        rangeList.Length.Should().Be(2);
+
+        var firstRangeList = rangeList.First().ToArray();
+        firstRangeList.First().First().Should().Be(22);
+        firstRangeList.First().Last().Should().Be(65);
+        firstRangeList.Last().First().Should().Be(22);
+        firstRangeList.Last().Last().Should().Be(66);
+        
+        var secondRangeList = rangeList.Last().ToArray();
+        secondRangeList.First().First().Should().Be(91);
+        secondRangeList.First().Last().Should().Be(94);
+        secondRangeList.Last().First().Should().Be(63);
+        secondRangeList.Last().Last().Should().Be(91);
+    }
+
+    [Theory]
+    [InlineData(4, 6, 6, 6, true)]
+    [InlineData(2, 8, 3, 7, true)]
+    [InlineData(2, 4, 6, 8, false)]
+    [InlineData(1, 1, 2, 2, false)]
+    public void CanDetermineIfRangeIsFullyContainedByAnother(
+        int range1Lo,
+        int range1Hi,
+        int range2Lo,
+        int range2Hi,
+        bool result)
+    {
+        Enumerable.Range(range1Lo, range1Hi - range1Lo + 1)
+            .FullOverlapExists(Enumerable.Range(range2Lo, range2Hi - range2Lo + 1))
+            .Should()
+            .Be(result);
+    }
 }

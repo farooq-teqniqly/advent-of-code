@@ -108,4 +108,32 @@ public class AdventOfCodeTests
 
         totalPriority.Should().Be(2425);
     }
+
+    [Fact]
+    public async Task Day4Part1()
+    {
+        var reader = new StreamReader("day4.txt");
+        string[] lines;
+        
+        using (reader)
+        {
+            lines = await Functions.ReadLines(reader).ToArrayAsync();
+        }
+
+        var rangeList = lines.CreateRanges().ToArray();
+
+        rangeList.Length.Should().Be(1000);
+
+        var overlaps = rangeList
+            .Select(rangePair =>
+            {
+                var arr = rangePair.ToArray();
+                return arr
+                    .First()
+                    .FullOverlapExists(arr.ElementAt(1));
+            })
+            .Count(doesOverlap => doesOverlap);
+
+        overlaps.Should().Be(584);
+    }
 }

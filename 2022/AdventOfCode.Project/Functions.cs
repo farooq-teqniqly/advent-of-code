@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Shared.Types;
+﻿using System.Collections;
+using AdventOfCode.Shared.Types;
 
 namespace AdventOfCode.Project;
 
@@ -84,5 +85,61 @@ public static class Functions
         }
 
         throw new InvalidOperationException($"'{c}' is not a valid character.");
+    }
+
+    public static bool FullOverlapExists(this IEnumerable<int> range1, IEnumerable<int> range2)
+    {
+        IEnumerable<int> shorterRange;
+        IEnumerable<int> longerRange;
+        
+        var range1Arr = range1.ToArray();
+        var range2Arr = range2.ToArray();
+
+        if (range1Arr.Length < range2Arr.Length)
+        {
+            shorterRange = range1Arr;
+            longerRange = range2Arr;
+        }
+        else
+        {
+            longerRange = range1Arr;
+            shorterRange = range2Arr;
+        }
+
+        var intersect = longerRange.Intersect(shorterRange);
+        return intersect.SequenceEqual(shorterRange);
+    }
+
+    public static IEnumerable<IEnumerable<IEnumerable<int>>> CreateRanges(this IEnumerable<string> lines)
+    {
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+
+            var pairs = line.Split(',');
+            var ranges = new List<IEnumerable<int>>();
+            var count = 0;
+            
+            foreach (var pair in pairs)
+            {
+                if (count == 2)
+                {
+                    yield return ranges;
+                    count = 0;
+                    ranges = new List<IEnumerable<int>>();
+                }
+                else
+                {
+                    var range = pair.Split('-').Select(int.Parse).ToArray();
+                    ranges.Add(Enumerable.Range(range[0], range[1] - range[0] + 1));
+                    count++;
+                }
+            }
+
+            yield return ranges;
+        }
     }
 }
