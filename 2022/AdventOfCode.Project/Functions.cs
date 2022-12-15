@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Reflection.Emit;
+﻿using System.Text.RegularExpressions;
 using AdventOfCode.Shared.Types;
+using AdventOfCode.Shared.Types.ShelfGame;
 
 namespace AdventOfCode.Project;
 
-public static class Functions
+public static partial class Functions
 {
     public static async IAsyncEnumerable<string> ReadLines(TextReader reader)
     {
@@ -170,5 +170,46 @@ public static class Functions
         }
 
         return matrix;
+    }
+
+    [GeneratedRegex(@"move\s+(?<moves>\d{1,2})\s+from\s+(?<from>\d{1})\s+to\s+(?<to>\d{1})", 
+        RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex MyRegex();
+    public static IEnumerable<ShelfItemMove> CreateShelfItemMoves(this IEnumerable<string> lines)
+    {
+        var regex = MyRegex();
+        
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+
+            var matchResult = regex.Match(line);
+
+            yield return new ShelfItemMove(
+                int.Parse(matchResult.Groups["moves"].Value),
+                int.Parse(matchResult.Groups["from"].Value),
+                int.Parse(matchResult.Groups["to"].Value));
+
+        }
+    }
+
+    public static void ApplyMoves(this IEnumerable<Shelf> shelves, IEnumerable<ShelfItemMove> moves)
+    {
+        var shelfArr = shelves.ToArray();
+        
+        foreach (var move in moves)
+        {
+            var fromShelf = shelfArr.ElementAt(move.FromId - 1);
+            var toShelf = shelfArr.ElementAt(move.ToId - 1);
+
+            for (var i = 0; i < move.NumberOfItems; i++)
+            {
+                var popped = fromShelf.RemoveFromTop();
+                toShelf.AddToTop(popped ?? throw new InvalidOperationException());
+            }
+        }
     }
 }

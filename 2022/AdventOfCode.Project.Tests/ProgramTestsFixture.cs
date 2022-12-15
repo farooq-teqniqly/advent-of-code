@@ -7,6 +7,7 @@ public class ProgramTestsFixture
     public IEnumerable<string> RpsLineItems { get; }
     public IEnumerable<string> RangeLineItems { get; }
     public IEnumerable<string> ShelfLineItems { get; }
+    public IEnumerable<string> ShelfItemMoveLineItems { get; }
     
     public ProgramTestsFixture()
     {
@@ -15,6 +16,7 @@ public class ProgramTestsFixture
         RpsLineItems = ReadLineItems(TestData.RpsLineItems);
         RangeLineItems = ReadLineItems(TestData.RangeLineItems);
         ShelfLineItems = ReadLineItems(TestData.ShelfLineItems);
+        ShelfItemMoveLineItems = ReadLineItems(TestData.ShelfItemMoveLineItems);
     }
 
     private static IEnumerable<string> ReadLineItems(string items)

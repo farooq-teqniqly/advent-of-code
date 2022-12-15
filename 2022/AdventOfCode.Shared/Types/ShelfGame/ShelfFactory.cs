@@ -1,28 +1,4 @@
-﻿namespace AdventOfCode.Shared.Types;
-
-public class Shelf
-{
-    private readonly Stack<string> _stack = new();
-    private readonly int _id;
-
-    public int Id => _id;
-    public IEnumerable<string> Items => _stack.AsEnumerable();
-
-    public Shelf(IEnumerable<string> items, int id)
-    {
-        _id = id;
-        
-        foreach (var item in items)
-        {
-            if (item is "[0]" or null)
-            {
-                continue;
-            }
-            
-            _stack.Push(item);
-        }
-    }
-}
+﻿namespace AdventOfCode.Shared.Types.ShelfGame;
 
 public static class ShelfFactory
 {
