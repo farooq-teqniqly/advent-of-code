@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection.Emit;
 using AdventOfCode.Shared.Types;
 
 namespace AdventOfCode.Project;
@@ -141,5 +142,33 @@ public static class Functions
 
             yield return ranges;
         }
+    }
+
+    public static string[,] CreateShelfMatrix(
+        this IEnumerable<string> lines,
+        int shelfCount,
+        int shelfHeight)
+    {
+        var matrix = new string[shelfHeight, shelfCount];
+        var lineNo = 0;
+        
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+            
+            var colValues = line.Split(" ");
+            
+            for (var colNo = 0; colNo < shelfCount; colNo++)
+            {
+                matrix[lineNo, colNo] = colValues[colNo];
+            }
+    
+            lineNo++;
+        }
+
+        return matrix;
     }
 }

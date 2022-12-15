@@ -1,4 +1,5 @@
 using AdventOfCode.Shared;
+using AdventOfCode.Shared.Types;
 using AdventOfCode.Shared.Types.RPS;
 
 namespace AdventOfCode.Project.Tests;
@@ -213,5 +214,70 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
             .Intersect(Enumerable.Range(range2Lo, range2Hi - range2Lo + 1))
             .Any()
             .Should().Be(result);
+    }
+
+    [Fact]
+    public void CanCreateShelves()
+    {
+        var lines = _fixture.ShelfLineItems.ToArray();
+        var matrix = lines.CreateShelfMatrix(9, 3);
+        var shelves = matrix.CreateShelves().ToArray();
+
+        shelves.Length.Should().Be(9);
+
+        shelves.Select(s => s.Id).SequenceEqual(Enumerable.Range(1, 9)).Should().BeTrue();
+
+        shelves
+            .First()
+            .Items
+            .SequenceEqual(new[] { "[W]", "[B]", "[G]" })
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public void CanReadShelfMatrix()
+    {
+        var lines = _fixture.ShelfLineItems.ToArray();
+        var matrix = lines.CreateShelfMatrix(9, 3);
+        var rowCount = matrix.GetLength(0);
+        var colCount = matrix.GetLength(1);
+
+        for (var lineNo = 0; lineNo < rowCount; lineNo++)
+        {
+            if (string.IsNullOrEmpty(lines[lineNo]))
+            {
+                continue;
+            }
+
+            var colValues = lines[lineNo]
+                .Split(" ");
+            
+            for (var colNo = 0; colNo < colCount; colNo++)
+            {
+                matrix[lineNo, colNo] = colValues[colNo];
+            }
+        }
+
+        SelectRow(0).SequenceEqual(new[] { "[W]", "[V]", "[0]", "[P]", "[0]", "[0]", "[0]", "[0]", "[0]" })
+            .Should().BeTrue();
+        
+        SelectRow(1).SequenceEqual(new[] { "[B]", "[T]", "[0]", "[C]", "[B]", "[0]", "[G]", "[0]", "[0]" })
+            .Should().BeTrue();
+        
+        SelectRow(2).SequenceEqual(new[] { "[G]", "[S]", "[0]", "[V]", "[H]", "[N]", "[T]", "[0]", "[0]" })
+            .Should().BeTrue();
+
+        IEnumerable<string> SelectRow(int rowIndex)
+        {
+            return Enumerable.Range(0, rowCount)
+                .Select(
+                    row => new
+                    {
+                        index = row,
+                        row = Enumerable.Range(0, colCount).Select(col => matrix[row, col])
+                    })
+                .First(arg => arg.index == rowIndex).row;
+        }
     }
 }
