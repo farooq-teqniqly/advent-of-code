@@ -216,8 +216,14 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
             .Should().Be(result);
     }
 
-    [Fact]
-    public void CanCreateShelves()
+    [Theory]
+    [InlineData(1, new string[] {"[W]", "[B]", "[G]"})]
+    [InlineData(2, new string[] {"[V]", "[T]", "[S]"})]
+    [InlineData(4, new string[] {"[P]", "[C]", "[V]"})]
+    [InlineData(5, new string[] {"[B]", "[H]"})]
+    [InlineData(6, new string[] {"[N]"})]
+    [InlineData(7, new string[] {"[G]", "[T]"})]
+    public void CanCreateShelves(int shelfId, string[] items)
     {
         var lines = _fixture.ShelfLineItems.ToArray();
         var matrix = lines.CreateShelfMatrix(9, 3);
@@ -227,12 +233,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
 
         shelves.Select(s => s.Id).SequenceEqual(Enumerable.Range(1, 9)).Should().BeTrue();
 
-        shelves
-            .First()
-            .Items
-            .SequenceEqual(new[] { "[W]", "[B]", "[G]" })
-            .Should()
-            .BeTrue();
+        shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
     }
 
     [Fact]
