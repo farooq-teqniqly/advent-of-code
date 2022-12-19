@@ -1,21 +1,22 @@
 using AdventOfCode.Shared;
 using AdventOfCode.Shared.Types.RPS;
+using AdventOfCode.Shared.Types.ShelfGame;
 
 namespace AdventOfCode.Project.Tests;
 
 public class FunctionsTests : IClassFixture<ProgramTestsFixture>
 {
-    private readonly ProgramTestsFixture _fixture;
+    private readonly ProgramTestsFixture fixture;
 
     public FunctionsTests(ProgramTestsFixture fixture)
     {
-        _fixture = fixture;
+        this.fixture = fixture;
     }
     
     [Fact]
     public void CanReadLinesFromInput()
     {
-        var lines = _fixture.CalorieLineItems.ToArray();
+        var lines = fixture.CalorieLineItems.ToArray();
         
         lines.Length.Should().Be(9);
         lines.SequenceEqual(new[] { "100", "", "200", "300", "400", "", "50", "60", "" }).Should().BeTrue();
@@ -24,7 +25,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanCreateLineItems()
     {
-        var lines = _fixture.CalorieLineItems.ToArray();
+        var lines = fixture.CalorieLineItems.ToArray();
         var lineItems = lines.CreateLineItems().ToArray();
 
         var index1LineItems = lineItems.Where(li => li.Index == 1).ToArray();
@@ -43,7 +44,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanCreateRucksacks()
     {
-        var lines = _fixture.RucksackLineItems.ToArray();
+        var lines = fixture.RucksackLineItems.ToArray();
         var rucksacks = lines.CreateRucksacks().ToArray();
 
         rucksacks.Length.Should().Be(3);
@@ -67,7 +68,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanGroupRucksacks()
     {
-        var lines = _fixture.RucksackLineItems.ToArray();
+        var lines = fixture.RucksackLineItems.ToArray();
         var rucksacks = lines.CreateRucksacks().ToArray();
         const int groupSize = 3;
 
@@ -84,7 +85,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanGetCommonCharactersInGroup()
     {
-        var lines = _fixture.RucksackLineItems.ToArray();
+        var lines = fixture.RucksackLineItems.ToArray();
         var rucksacks = lines.CreateRucksacks().ToArray();
         const int groupSize = 3;
 
@@ -102,7 +103,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanPlayRockPaperScissors()
     {
-        var lines = _fixture.RpsLineItems;
+        var lines = fixture.RpsLineItems;
         var games = RpsGameFactory.CreateGames(lines).ToArray();
 
         games.Length.Should().Be(3);
@@ -159,7 +160,7 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
     [Fact]
     public void CanCreateRanges()
     {
-        var lines = _fixture.RangeLineItems;
+        var lines = fixture.RangeLineItems;
         var rangeList = lines.CreateRanges().ToArray();
 
         rangeList.Length.Should().Be(2);
@@ -213,5 +214,90 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
             .Intersect(Enumerable.Range(range2Lo, range2Hi - range2Lo + 1))
             .Any()
             .Should().Be(result);
+    }
+
+    [Theory]
+    [InlineData(1, new[] {"[W]", "[B]", "[G]"})]
+    [InlineData(2, new[] {"[V]", "[T]", "[S]"})]
+    [InlineData(3, new string[] {})]
+    [InlineData(4, new[] {"[P]", "[C]", "[V]"})]
+    [InlineData(5, new[] {"[B]", "[H]"})]
+    [InlineData(6, new[] {"[N]"})]
+    [InlineData(7, new[] {"[G]", "[T]"})]
+    [InlineData(8, new[] {"[A]", "[X]"})]
+    [InlineData(9, new[] {"[R]", "[L]"})]
+    public void CanCreateShelves(int shelfId, string[] items)
+    {
+        var lines = fixture.ShelfLineItems.ToArray();
+        var matrix = lines.CreateShelfMatrix(9, 3);
+        var shelves = matrix.CreateShelves().ToArray();
+        
+        shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CanCreateShelfItemMoves()
+    {
+        var lines = fixture.ShelfItemMoveLineItems.ToArray();
+        var moves = lines.CreateShelfItemMoves().ToArray();
+
+        moves.Length.Should().Be(3);
+
+        var firstMove = moves.First();
+        firstMove.NumberOfItems.Should().Be(2);
+        firstMove.FromId.Should().Be(8);
+        firstMove.ToId.Should().Be(4);
+        
+        var secondMove = moves.ElementAt(1);
+        secondMove.NumberOfItems.Should().Be(2);
+        secondMove.FromId.Should().Be(7);
+        secondMove.ToId.Should().Be(3);
+        
+        var lastMove = moves.ElementAt(2);
+        lastMove.NumberOfItems.Should().Be(2);
+        lastMove.FromId.Should().Be(9);
+        lastMove.ToId.Should().Be(2);
+    }
+
+    [Theory]
+    [InlineData(1, new[] {"[W]", "[B]", "[G]"})]
+    [InlineData(2, new[] {"[L]", "[R]", "[V]", "[T]", "[S]"})]
+    [InlineData(3, new[] {"[T]", "[G]"})]
+    [InlineData(4, new[] {"[X]", "[A]", "[P]", "[C]", "[V]"})]
+    [InlineData(5, new[] {"[B]", "[H]"})]
+    [InlineData(6, new[] {"[N]"})]
+    [InlineData(7, new string[] {})]
+    [InlineData(8, new string[] {})]
+    [InlineData(9, new string[] {})]
+    public void CanMoveShelfItems(int shelfId, string[] items)
+    {
+        var matrix = fixture.ShelfLineItems.CreateShelfMatrix(9, 3);
+        var shelves = matrix.CreateShelves().ToArray();
+        var moves = fixture.ShelfItemMoveLineItems.CreateShelfItemMoves().ToArray();
+
+        shelves.ApplyMoves(moves);
+        
+        shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData(1, new[] {"[W]", "[B]", "[G]"})]
+    [InlineData(2, new[] {"[R]", "[L]", "[V]", "[T]", "[S]"})]
+    [InlineData(3, new[] {"[G]", "[T]"})]
+    [InlineData(4, new[] {"[A]", "[X]", "[P]", "[C]", "[V]"})]
+    [InlineData(5, new[] {"[B]", "[H]"})]
+    [InlineData(6, new[] {"[N]"})]
+    [InlineData(7, new string[] {})]
+    [InlineData(8, new string[] {})]
+    [InlineData(9, new string[] {})]
+    public void CanMoveShelfItemsV2(int shelfId, string[] items)
+    {
+        var matrix = fixture.ShelfLineItems.CreateShelfMatrix(9, 3);
+        var shelves = matrix.CreateShelves().ToArray();
+        var moves = fixture.ShelfItemMoveLineItems.CreateShelfItemMoves().ToArray();
+
+        shelves.ApplyMovesV2(moves);
+        
+        shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
     }
 }

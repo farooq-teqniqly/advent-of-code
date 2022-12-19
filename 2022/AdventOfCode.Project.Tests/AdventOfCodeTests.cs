@@ -1,4 +1,5 @@
 ﻿using AdventOfCode.Shared.Types.RPS;
+using AdventOfCode.Shared.Types.ShelfGame;
 
 namespace AdventOfCode.Project.Tests;
 
@@ -97,14 +98,13 @@ public class AdventOfCodeTests
         rucksacks.Length.Should().Be(300);
 
         const int groupSize = 3;
-        var groups = rucksacks.DivideIntoGroupsOf(groupSize).ToArray() ?? throw new ArgumentNullException("rucksacks.DivideIntoGroupsOf(groupSize).ToArray()");
+        var groups = rucksacks.DivideIntoGroupsOf(groupSize).ToArray();
         
-        var totalPriority = 0;
-        
-        foreach (var group in groups)
-        {
-            totalPriority += group.Select(r => r.Id).IntersectAll().Single().ToPriority();
-        }
+        var totalPriority = groups
+            .Sum(group => group.Select(r => r.Id)
+                .IntersectAll()
+                .Single()
+                .ToPriority());
 
         totalPriority.Should().Be(2425);
     }
@@ -165,5 +165,95 @@ public class AdventOfCodeTests
             .Count(intersect => intersect.Any());
 
         overlaps.Should().Be(933);
+    }
+
+    [Fact]
+    public async Task Day5Part1()
+    {
+        var boxesReader = new StreamReader("day5_boxes.txt");
+        string[] boxLines;
+        
+        using (boxesReader)
+        {
+            boxLines = await Functions.ReadLines(boxesReader).ToArrayAsync();
+        }
+
+        var movesReader = new StreamReader("day5_moves.txt");
+        string[] moveLines;
+
+        using (movesReader)
+        {
+            moveLines = await Functions.ReadLines(movesReader).ToArrayAsync();
+        }
+
+        const int shelfCount = 9;
+        const int shelfHeight = 8;
+        
+        var shelves = boxLines.CreateShelfMatrix(shelfCount, shelfHeight).CreateShelves();
+        var moves = moveLines.CreateShelfItemMoves();
+        var shelfArray = shelves.ToArray();
+        shelfArray.ApplyMoves(moves);
+
+        var topItems = new string[shelfCount];
+        
+        for (var i = 0; i < shelfArray.Length; i++)
+        {
+            var topItem = shelfArray[i].RemoveFromTop();
+
+            if (topItem == null)
+            {
+                topItems[i] = "0";
+                continue;
+            }
+            
+            topItems[i] = topItem;    
+        }
+
+        topItems.SequenceEqual(new[] {"[T]", "[B]", "[V]", "[F]", "[V]", "[D]", "[Z]", "[P]", "[N]" }).Should().BeTrue();
+    }
+    
+    [Fact]
+    public async Task Day5Part2()
+    {
+        var boxesReader = new StreamReader("day5_boxes.txt");
+        string[] boxLines;
+        
+        using (boxesReader)
+        {
+            boxLines = await Functions.ReadLines(boxesReader).ToArrayAsync();
+        }
+
+        var movesReader = new StreamReader("day5_moves.txt");
+        string[] moveLines;
+
+        using (movesReader)
+        {
+            moveLines = await Functions.ReadLines(movesReader).ToArrayAsync();
+        }
+
+        const int shelfCount = 9;
+        const int shelfHeight = 8;
+        
+        var shelves = boxLines.CreateShelfMatrix(shelfCount, shelfHeight).CreateShelves();
+        var moves = moveLines.CreateShelfItemMoves();
+        var shelfArray = shelves.ToArray();
+        shelfArray.ApplyMovesV2(moves);
+
+        var topItems = new string[shelfCount];
+        
+        for (var i = 0; i < shelfArray.Length; i++)
+        {
+            var topItem = shelfArray[i].RemoveFromTop();
+
+            if (topItem == null)
+            {
+                topItems[i] = "0";
+                continue;
+            }
+            
+            topItems[i] = topItem;    
+        }
+
+        topItems.SequenceEqual(new[] {"[V]", "[L]", "[C]", "[W]", "[H]", "[T]", "[D]", "[S]", "[Z]" }).Should().BeTrue();
     }
 }
