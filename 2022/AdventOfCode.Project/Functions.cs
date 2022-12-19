@@ -172,7 +172,7 @@ public static partial class Functions
         return matrix;
     }
 
-    [GeneratedRegex(@"move\s+(?<moves>\d{1,2})\s+from\s+(?<from>\d{1})\s+to\s+(?<to>\d{1})", 
+    [GeneratedRegex(@"move\s+(?<moves>\d{1,2})\s+from\s+(?<from>\d{1})\s+to\s+(?<to>\d{1})",
         RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex MyRegex();
     public static IEnumerable<ShelfItemMove> CreateShelfItemMoves(this IEnumerable<string> lines)
@@ -209,6 +209,31 @@ public static partial class Functions
             {
                 var popped = fromShelf.RemoveFromTop();
                 toShelf.AddToTop(popped ?? throw new InvalidOperationException());
+            }
+        }
+    }
+    
+    public static void ApplyMovesV2(this IEnumerable<Shelf> shelves, IEnumerable<ShelfItemMove> moves)
+    {
+        var shelfArr = shelves.ToArray();
+        
+        foreach (var move in moves)
+        {
+            var fromShelf = shelfArr.ElementAt(move.FromId - 1);
+            var toShelf = shelfArr.ElementAt(move.ToId - 1);
+            var temp = new List<string?>();
+            
+            for (var i = 0; i < move.NumberOfItems; i++)
+            {
+                var popped = fromShelf.RemoveFromTop();
+                temp.Add(popped);
+            }
+
+            temp.Reverse();
+
+            foreach (var item in temp)
+            {
+                toShelf.AddToTop(item ?? throw new InvalidOperationException());
             }
         }
     }

@@ -279,4 +279,25 @@ public class FunctionsTests : IClassFixture<ProgramTestsFixture>
         
         shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
     }
+    
+    [Theory]
+    [InlineData(1, new[] {"[W]", "[B]", "[G]"})]
+    [InlineData(2, new[] {"[R]", "[L]", "[V]", "[T]", "[S]"})]
+    [InlineData(3, new[] {"[G]", "[T]"})]
+    [InlineData(4, new[] {"[A]", "[X]", "[P]", "[C]", "[V]"})]
+    [InlineData(5, new[] {"[B]", "[H]"})]
+    [InlineData(6, new[] {"[N]"})]
+    [InlineData(7, new string[] {})]
+    [InlineData(8, new string[] {})]
+    [InlineData(9, new string[] {})]
+    public void CanMoveShelfItemsV2(int shelfId, string[] items)
+    {
+        var matrix = fixture.ShelfLineItems.CreateShelfMatrix(9, 3);
+        var shelves = matrix.CreateShelves().ToArray();
+        var moves = fixture.ShelfItemMoveLineItems.CreateShelfItemMoves().ToArray();
+
+        shelves.ApplyMovesV2(moves);
+        
+        shelves.Single(s => s.Id == shelfId).Items.SequenceEqual(items).Should().BeTrue();
+    }
 }

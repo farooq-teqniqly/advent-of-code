@@ -211,4 +211,49 @@ public class AdventOfCodeTests
 
         topItems.SequenceEqual(new[] {"[T]", "[B]", "[V]", "[F]", "[V]", "[D]", "[Z]", "[P]", "[N]" }).Should().BeTrue();
     }
+    
+    [Fact]
+    public async Task Day5Part2()
+    {
+        var boxesReader = new StreamReader("day5_boxes.txt");
+        string[] boxLines;
+        
+        using (boxesReader)
+        {
+            boxLines = await Functions.ReadLines(boxesReader).ToArrayAsync();
+        }
+
+        var movesReader = new StreamReader("day5_moves.txt");
+        string[] moveLines;
+
+        using (movesReader)
+        {
+            moveLines = await Functions.ReadLines(movesReader).ToArrayAsync();
+        }
+
+        const int shelfCount = 9;
+        const int shelfHeight = 8;
+        
+        var shelves = boxLines.CreateShelfMatrix(shelfCount, shelfHeight).CreateShelves();
+        var moves = moveLines.CreateShelfItemMoves();
+        var shelfArray = shelves.ToArray();
+        shelfArray.ApplyMovesV2(moves);
+
+        var topItems = new string[shelfCount];
+        
+        for (var i = 0; i < shelfArray.Length; i++)
+        {
+            var topItem = shelfArray[i].RemoveFromTop();
+
+            if (topItem == null)
+            {
+                topItems[i] = "0";
+                continue;
+            }
+            
+            topItems[i] = topItem;    
+        }
+
+        topItems.SequenceEqual(new[] {"[V]", "[L]", "[C]", "[W]", "[H]", "[T]", "[D]", "[S]", "[Z]" }).Should().BeTrue();
+    }
 }
